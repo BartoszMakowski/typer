@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Bet, Event, Wallet
 
-# Register your models here.
+
+admin.site.register([Bet, Event, Wallet])

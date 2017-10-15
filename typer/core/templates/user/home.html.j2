@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Typer - start</title>
+</head>
+<body>
+<h1>Witaj, {{ username }}</h1>
+<hr>
+<h2>Twoje portfele:</h2>
+<ul>
+    {% for wallet in wallets %}
+    <li>{{wallet.name}}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

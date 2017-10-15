@@ -5,9 +5,12 @@ from datetime import datetime
 
 class Wallet(models.Model):
     owner = models.ForeignKey(User, null=False)
+    name = models.CharField(max_length=100, blank=False)
+    description = models.TextField(blank=True)
     money = models.FloatField(blank=False)
     active = models.BooleanField(default=True, blank=False)
     creation_time = models.DateTimeField(default=datetime.now)
+    template = models.BooleanField(default=False, blank=False)
 
 
 class Event(models.Model):
