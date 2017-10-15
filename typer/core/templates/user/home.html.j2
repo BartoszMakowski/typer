@@ -10,7 +10,7 @@
 <h2>Twoje portfele:</h2>
 <ul>
     {% for wallet in wallets %}
-    <li>{{wallet.name}}</li>
+    <li><a href="/typer/wallet/{{ wallet.id }}">{{  wallet.name  }}</a></li>
     {% endfor %}
 </ul>
 </body>
