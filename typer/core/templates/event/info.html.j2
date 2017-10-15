@@ -12,5 +12,14 @@
 <p><b>{{ field.name }}:</b> {{ event[ field.name ] }}</p>
   {% endif %}
 {% endfor %}
+
+{% if bet_form %}
+<hr/>
+<form method="post" action="">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    {{ bet_form }}
+    <input type="submit" value="Obstaw!" />
+</form>
+{% endif %}
 </body>
 </html>

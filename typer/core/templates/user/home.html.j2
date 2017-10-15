@@ -13,5 +13,10 @@
     <li><a href="/typer/wallet/{{ wallet.id }}">{{  wallet.name  }}</a></li>
     {% endfor %}
 </ul>
+<hr>
+<h2>Dostępne wydarzenia:</h2>
+    {% for event in events %}
+    <li><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></li>
+    {% endfor %}
 </body>
 </html>

@@ -1,15 +1,19 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from datetime import datetime
 from .models import Wallet, Event
+from .forms import BetEventForm
 
 
 def index(request):
     if request.user.is_authenticated():
         user = request.user
         wallets = Wallet.objects.filter(owner=user).all()
+        events = Event.objects.filter(start_time__gte=datetime.now(), closed=False)
         return render(request, 'user/home.html.j2',
                       {'username': user.username,
-                       'wallets': wallets})
+                       'wallets': wallets,
+                       'events': events})
     else:
         return HttpResponse("INDEX PAGE")
 
@@ -33,8 +37,28 @@ def event_list(request):
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
     fields = Event._meta.get_fields()
-    return render(request, 'event/info.html.j2',
-                  {'event': event,
-                   'fields': fields})
+    template_data = {'event': event,
+                   'fields': fields}
+    if request.method == 'POST':
+        bet_form = BetEventForm(request.POST)
+        if bet_form.is_valid():
+            bet = bet_form.save(commit=False)
+            bet.event = event
+            if bet.chosen_result == 0:
+                bet.odd = event.draw_odd
+            elif bet.chosen_result == 1:
+                bet.odd = event.home_odd
+            elif bet.chosen_result ==2:
+                bet.odd = event.away_odd
+            bet.reward = bet.value * bet.odd
+            bet.open = True
+            bet.save()
+            return HttpResponseRedirect(".")
+
+    else:
+        if not event.closed:
+            bet_form = BetEventForm()
+            template_data['bet_form'] = bet_form
+    return render(request, 'event/info.html.j2',template_data)
 
 

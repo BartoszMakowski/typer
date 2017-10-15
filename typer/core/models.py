@@ -26,15 +26,16 @@ class Event(models.Model):
     away_odd = models.FloatField(default=1.0, blank=False)
     draw_odd = models.FloatField(default=1.0, blank=False)
     closed = models.BooleanField(default=False, blank=False)
-    result = models.IntegerField(blank=True)
+    result = models.IntegerField(null=True, blank=True)
 
 
 class Bet(models.Model):
     wallet = models.ForeignKey(Wallet, null=False)
+    chosen_result = models.IntegerField(blank=False)
     event = models.ForeignKey(Event, null=False)
     value = models.FloatField(blank=False)
     odd = models.FloatField(blank=False)
     reward = models.FloatField(blank=False)
     creation_time = models.DateTimeField(default=datetime.now, blank=False)
     open = models.BooleanField(default=True, blank=False)
-    won = models.BooleanField(blank=True)
+    won = models.NullBooleanField(null=True, blank=True)
