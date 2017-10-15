@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>
+</head>
+<body>
+<h1>Wydarzenie {{ event.name }} (#{{ event.id }})</h1>
+<hr/>
+{% for field in fields %}
+  {% if not field.is_relation %}
+<p><b>{{ field.name }}:</b> {{ event[ field.name ] }}</p>
+  {% endif %}
+{% endfor %}
+</body>
+</html>

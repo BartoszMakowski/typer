@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista wydarzeń</title>
+</head>
+<body>
+<h1>Lista wydarzeń</h1>
+<hr/>
+<ul>
+    {% for event in events %}
+    <li><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

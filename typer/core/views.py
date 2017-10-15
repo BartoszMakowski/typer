@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Wallet
+from .models import Wallet, Event
 
 
 def index(request):
@@ -23,3 +23,18 @@ def wallet_info(request, wallet_id):
                        'wallet': wallet})
     else:
         return HttpResponse("WALLET INFO PAGE")
+
+
+def event_list(request):
+    events = Event.objects.all()
+    return render(request, 'event/index.html.j2',
+                  {'events': events})
+
+def event_info(request, event_id):
+    event = Event.objects.get(id=event_id)
+    fields = Event._meta.get_fields()
+    return render(request, 'event/info.html.j2',
+                  {'event': event,
+                   'fields': fields})
+
+
