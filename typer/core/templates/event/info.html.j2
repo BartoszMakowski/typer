@@ -21,5 +21,27 @@
     <input type="submit" value="Obstaw!" />
 </form>
 {% endif %}
+{% if bets %}
+<hr/>
+<table id="bets_history">
+    <tr>
+        <th>Typ</th>
+        <th>Stawka</th>
+        <th>Kurs</th>
+        <th>Możliwa wygrana</th>
+        <th>Data zawarcia</th>
+    </tr>
+
+  {% for bet in bets %}
+    <tr>
+        <td>{{ bet.chosen_result }}</td>
+        <td>{{ bet.value }}</td>
+        <td>{{ bet.odd }}</td>
+        <td>{{ bet.reward }}</td>
+        <td>{{ bet.creation_time }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endif %}
 </body>
 </html>

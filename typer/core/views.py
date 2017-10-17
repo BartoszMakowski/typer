@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from datetime import datetime
-from .models import Wallet, Event
+from .models import Wallet, Event, Bet
 from .forms import BetEventForm
 
 
@@ -37,8 +37,10 @@ def event_list(request):
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
     fields = Event._meta.get_fields()
+    bets = Bet.objects.filter(event=event_id)
     template_data = {'event': event,
-                   'fields': fields}
+                   'fields': fields,
+                     'bets': bets}
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
         if bet_form.is_valid():
@@ -48,8 +50,14 @@ def event_info(request, event_id):
                 bet.odd = event.draw_odd
             elif bet.chosen_result == 1:
                 bet.odd = event.home_odd
-            elif bet.chosen_result ==2:
+            elif bet.chosen_result == 2:
                 bet.odd = event.away_odd
+            if bet.value > bet.wallet.money:
+                #TODO: not enough money
+                pass
+            else:
+                bet.wallet.money -= bet.value
+                bet.wallet.save()
             bet.reward = bet.value * bet.odd
             bet.open = True
             bet.save()
@@ -58,6 +66,7 @@ def event_info(request, event_id):
     else:
         if not event.closed:
             bet_form = BetEventForm()
+            bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
             template_data['bet_form'] = bet_form
     return render(request, 'event/info.html.j2',template_data)
 

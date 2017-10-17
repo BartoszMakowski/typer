@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
+BET_SIDE = (
+    (0, 'X'),
+    (1, '1'),
+    (2, '2')
+)
+
 
 class Wallet(models.Model):
     owner = models.ForeignKey(User, null=False)
@@ -31,7 +37,7 @@ class Event(models.Model):
 
 class Bet(models.Model):
     wallet = models.ForeignKey(Wallet, null=False)
-    chosen_result = models.IntegerField(blank=False)
+    chosen_result = models.IntegerField(blank=False, choices=BET_SIDE)
     event = models.ForeignKey(Event, null=False)
     value = models.FloatField(blank=False)
     odd = models.FloatField(blank=False)
