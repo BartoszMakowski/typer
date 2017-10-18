@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista wydarzeń</title>
-</head>
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
 <body>
 <h1>Lista wydarzeń</h1>
 <hr/>
@@ -12,6 +9,4 @@
     <li><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></li>
     {% endfor %}
 </ul>
-
-</body>
-</html>
+{% endblock %}

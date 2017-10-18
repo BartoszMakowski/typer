@@ -1,4 +1,6 @@
 from django.conf.urls import include, url
+from django.contrib.auth import views as auth_views
+
 """typer URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -20,4 +22,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^typer/', include('typer.core.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', auth_views.login, {'template_name': 'user/login.html.j2'}, name='login'),
+    url(r'^logout/$', auth_views.logout, {'next_page': '/typer/'}, name='logout'),
+
 ]

@@ -1,14 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Portfel {{ wallet.name }} (#{{ wallet.id }})</title>
-</head>
-<body>
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
 <h1>Portfel {{ wallet.name }} (#{{ wallet.id }}) - info</h1>
 <hr/>
 <p><b>właściciel:</b> {{ wallet.owner }}</p>
 <p><b>saldo:</b> {{ wallet.money }}</p>
-
-</body>
-</html>
+{% endblock %}

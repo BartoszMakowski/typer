@@ -18,6 +18,9 @@ class Wallet(models.Model):
     creation_time = models.DateTimeField(default=datetime.now)
     template = models.BooleanField(default=False, blank=False)
 
+    def __str__(self):
+        return self.name
+
 
 class Event(models.Model):
     author = models.ForeignKey(User, null=False)

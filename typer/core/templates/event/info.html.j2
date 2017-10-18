@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>-->
+<!--</head>-->
+<!--<body>-->
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
 <h1>Wydarzenie {{ event.name }} (#{{ event.id }})</h1>
 <hr/>
 {% for field in fields %}
@@ -38,10 +41,11 @@
         <td>{{ bet.value }}</td>
         <td>{{ bet.odd }}</td>
         <td>{{ bet.reward }}</td>
-        <td>{{ bet.creation_time }}</td>
+        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
     </tr>
   {% endfor %}
 </table>
 {% endif %}
-</body>
-</html>
+{% endblock %}
+<!--</body>-->
+<!--</html>-->

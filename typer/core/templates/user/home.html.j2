@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Typer - start</title>
-</head>
-<body>
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
 <h1>Witaj, {{ username }}</h1>
 <hr>
 <h2>Twoje portfele:</h2>
@@ -18,5 +14,4 @@
     {% for event in events %}
     <li><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></li>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
