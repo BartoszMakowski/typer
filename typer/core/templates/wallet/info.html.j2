@@ -5,4 +5,54 @@
 <hr/>
 <p><b>właściciel:</b> {{ wallet.owner }}</p>
 <p><b>saldo:</b> {{ wallet.money }}</p>
+{% if open_bets %}
+<hr/>
+<h3>Otwarte zakłady</h3>
+<table id="open_bets">
+    <tr>
+        <th>Typ</th>
+        <th>Stawka</th>
+        <th>Kurs</th>
+        <th>Możliwa wygrana</th>
+        <th>Data zawarcia</th>
+    </tr>
+
+  {% for bet in open_bets %}
+    <tr>
+        <td>{{ bet.chosen_result }}</td>
+        <td>{{ bet.value }}</td>
+        <td>{{ bet.odd }}</td>
+        <td>{{ bet.reward }}</td>
+        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if closed_bets %}
+<hr/>
+<h3>Ostatnio rozliczone zakłady</h3>
+<table id="closed_bets">
+    <tr>
+        <th>Typ</th>
+        <th>Stawka</th>
+        <th>Kurs</th>
+        <th>Możliwa wygrana</th>
+        <th>Data zawarcia</th>
+    </tr>
+
+  {% for bet in closed_bets %}
+    <tr>
+        <td>{{ bet.chosen_result }}</td>
+        <td>{{ bet.value }}</td>
+        <td>{{ bet.odd }}</td>
+        <td>{{ bet.reward }}</td>
+        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+
+
 {% endblock %}

@@ -22,9 +22,14 @@ def wallet_info(request, wallet_id):
     if request.user.is_authenticated():
         user = request.user
         wallet = Wallet.objects.get(id=wallet_id)
+        bets = Bet.objects.filter(wallet=wallet)
+        open_bets = bets.filter(open=True).all()
+        closed_bets = bets.filter(open=False).all()
         return render(request, 'wallet/info.html.j2',
                       {'username': user.username,
-                       'wallet': wallet})
+                       'wallet': wallet,
+                       'open_bets': open_bets,
+                       'closed_bets': closed_bets})
     else:
         return HttpResponse("WALLET INFO PAGE")
 
