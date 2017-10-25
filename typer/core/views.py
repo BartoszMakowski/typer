@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from datetime import datetime
 from .models import Wallet, Event, Bet
-from .forms import BetEventForm
+from .forms import BetEventForm, NewEventForm
 
 
 def index(request):
@@ -44,7 +44,7 @@ def event_info(request, event_id):
     fields = Event._meta.get_fields()
     bets = Bet.objects.filter(event=event_id)
     template_data = {'event': event,
-                   'fields': fields,
+                     'fields': fields,
                      'bets': bets}
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
@@ -73,6 +73,18 @@ def event_info(request, event_id):
             bet_form = BetEventForm()
             bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
             template_data['bet_form'] = bet_form
-    return render(request, 'event/info.html.j2',template_data)
+    return render(request, 'event/info.html.j2', template_data)
 
-
+def event_new(request):
+    event_form = NewEventForm()
+    template_data = {
+        'event_form': event_form,
+    }
+    if request.method == 'POST':
+        event_form = BetEventForm(request.POST)
+        if event_form.is_valid():
+            event = event_form.save(commit=False)
+            event.author = request.user
+            event.save()
+            return HttpResponseRedirect("/typer/event")
+    return render(request, 'event/new.html.j2', template_data)
