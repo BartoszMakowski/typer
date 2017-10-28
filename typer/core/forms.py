@@ -12,4 +12,4 @@ class NewEventForm(ModelForm):
     class Meta:
         model = Event
         fields = '__all__'
-        exclude = ['author', 'creation_time', 'closed', 'result', ]
+        exclude = ['author', 'creation_time', 'open', 'result', ]

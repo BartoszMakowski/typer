@@ -10,7 +10,7 @@ def index(request):
     if request.user.is_authenticated():
         user = request.user
         wallets = Wallet.objects.filter(owner=user).all()
-        events = Event.objects.filter(start_time__gte=datetime.now(), closed=False)
+        events = Event.objects.filter(start_time__gte=datetime.now(), open=True)
         return render(request, 'user/home.html.j2',
                       {'username': user.username,
                        'wallets': wallets,
@@ -73,7 +73,7 @@ def event_info(request, event_id):
             return HttpResponseRedirect(".")
 
     else:
-        if not event.closed:
+        if event.open:
             bet_form = BetEventForm()
             bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
             template_data['bet_form'] = bet_form
