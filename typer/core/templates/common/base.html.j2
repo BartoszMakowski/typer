@@ -10,6 +10,12 @@
 <body>
 <nav class="navbar navbar-light bg-light">
     <span class="h1" class="navbar-brand mb-0">Typer</span>
+    {% if username %}
+    <span>Jesteś zalogowany jako: {{ username }}</span>
+    <a class="btn btn-danger" href="/logout">Wyloguj się</a>
+    {% else %}
+    <a class="btn btn-info" href="/login">Zaloguj się</a>
+    {% endif %}
 </nav>
 <div class="container">
 {% block content %}

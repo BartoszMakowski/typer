@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from .models import Wallet, Event, Bet
 from .forms import BetEventForm, NewEventForm
 
-
+@login_required(login_url='/login')
 def index(request):
     if request.user.is_authenticated():
         user = request.user
@@ -14,10 +15,8 @@ def index(request):
                       {'username': user.username,
                        'wallets': wallets,
                        'events': events})
-    else:
-        return HttpResponse("INDEX PAGE")
 
-
+@login_required(login_url='/login')
 def wallet_info(request, wallet_id):
     if request.user.is_authenticated():
         user = request.user
@@ -33,19 +32,24 @@ def wallet_info(request, wallet_id):
     else:
         return HttpResponse("WALLET INFO PAGE")
 
-
+@login_required(login_url='/login')
 def event_list(request):
     events = Event.objects.all()
     return render(request, 'event/index.html.j2',
-                  {'events': events})
+                  {'events': events,
+                   'username': request.user.username,
+                   })
 
+@login_required(login_url='/login')
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
     fields = Event._meta.get_fields()
     bets = Bet.objects.filter(event=event_id)
     template_data = {'event': event,
                      'fields': fields,
-                     'bets': bets}
+                     'bets': bets,
+                     'username': request.user.username,
+                     }
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
         if bet_form.is_valid():
@@ -75,16 +79,20 @@ def event_info(request, event_id):
             template_data['bet_form'] = bet_form
     return render(request, 'event/info.html.j2', template_data)
 
+@login_required(login_url='/login')
 def event_new(request):
     event_form = NewEventForm()
     template_data = {
         'event_form': event_form,
+        'username': request.user.username,
     }
     if request.method == 'POST':
-        event_form = BetEventForm(request.POST)
+        event_form = NewEventForm(request.POST)
         if event_form.is_valid():
             event = event_form.save(commit=False)
             event.author = request.user
             event.save()
             return HttpResponseRedirect("/typer/event")
+        else:
+            print(event_form.errors)
     return render(request, 'event/new.html.j2', template_data)
