@@ -1,0 +1,16 @@
+{% extends 'common/base.html.j2' %}
+{% block content %}
+<form method="post" action="">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+    {{ event_close_form }}
+    <input type="submit" value="Rozlicz wydarzenie" />
+</form>
+<hr/>
+<h4>Powiązane zakłady:</h4>
+    <ul>
+{% for bet in bets %}
+        <li>{{ bet.wallet.owner }} | {{ bet.value }} | {{ bet.chosen_result }}</li>
+{% endfor %}
+    </ul>
+
+{% endblock %}

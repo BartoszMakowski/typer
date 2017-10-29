@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from .models import Wallet, Event, Bet
-from .forms import BetEventForm, NewEventForm
+from .forms import BetEventForm, NewEventForm, CloseEventForm
 
 @login_required(login_url='/login')
 def index(request):
@@ -96,3 +96,34 @@ def event_new(request):
         else:
             print(event_form.errors)
     return render(request, 'event/new.html.j2', template_data)
+
+@login_required(login_url='/login')
+def event_close(request, event_id):
+    event_close_form = CloseEventForm()
+    bets = Bet.objects.filter(event=event_id).all()
+    print(bets)
+    template_data = {
+        'event_close_form': event_close_form,
+        'username': request.user.username,
+        'bets': bets
+    }
+    if request.method == 'POST':
+        event_close_form = CloseEventForm(request.POST)
+        if event_close_form.is_valid():
+            event = Event.objects.get(pk=event_id)
+            event.result = event_close_form.cleaned_data['result']
+            event.open = False
+            event.save()
+            for bet in bets:
+                if bet.chosen_result == event.result:
+                    bet.won = True
+                    bet.wallet.money += bet.reward
+                    bet.wallet.save()
+                else:
+                    bet.won = False
+                bet.open = False
+                bet.save()
+            return HttpResponseRedirect("/typer/event/" + event_id + "/")
+        else:
+            print(event_close_form.errors)
+    return render(request, 'event/close.html.j2', template_data)

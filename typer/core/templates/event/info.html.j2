@@ -32,6 +32,7 @@
         <th>Stawka</th>
         <th>Kurs</th>
         <th>Możliwa wygrana</th>
+        {% if not event.open %}<th>Wygrana</th>{% endif %}
         <th>Data zawarcia</th>
     </tr>
 
@@ -41,10 +42,15 @@
         <td>{{ bet.value }}</td>
         <td>{{ bet.odd }}</td>
         <td>{{ bet.reward }}</td>
+        {% if not event.open %}<td>{{ bet.reward * bet.won }}</td>{% endif %}
         <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
     </tr>
   {% endfor %}
 </table>
+{% endif %}
+{% if event.open %}
+<hr/>
+    <a class="btn btn-info" href="close">Rozlicz</a>
 {% endif %}
 {% endblock %}
 <!--</body>-->

@@ -20,3 +20,9 @@ class NewEventForm(ModelForm):
             'end_time': ext_widgets.DateTimeWidget(attrs={id:'id_end_time'},
                                                      usel10n=True, bootstrap_version=3)
         }
+
+
+class CloseEventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = ['result', ]

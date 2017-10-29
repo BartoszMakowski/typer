@@ -59,7 +59,8 @@ class Event(models.Model):
     open = models.BooleanField(default=True, blank=False,
                                verbose_name='Wydarzenie nierozliczone')
     result = models.IntegerField(null=True, blank=True,
-                                 verbose_name='Wynik wydarzenia')
+                                 verbose_name='Wynik wydarzenia',
+                                 choices=BET_SIDE)
 
     def __str__(self):
         return self.name
@@ -87,4 +88,4 @@ class Bet(models.Model):
                                   verbose_name='Zakład wygrany')
 
     def __str__(self):
-        return 'Zakład: ' + self.event
+        return 'Zakład: ' + self.event.name
