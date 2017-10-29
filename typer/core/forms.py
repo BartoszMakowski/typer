@@ -1,4 +1,5 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, widgets
+from datetimewidget import widgets as ext_widgets
 from typer.core.models import Bet, Event
 
 
@@ -13,3 +14,9 @@ class NewEventForm(ModelForm):
         model = Event
         fields = '__all__'
         exclude = ['author', 'creation_time', 'open', 'result', ]
+        widgets = {
+            'start_time': ext_widgets.DateTimeWidget(attrs={id:'id_start_time'},
+                                                     usel10n=True, bootstrap_version=3),
+            'end_time': ext_widgets.DateTimeWidget(attrs={id:'id_end_time'},
+                                                     usel10n=True, bootstrap_version=3)
+        }

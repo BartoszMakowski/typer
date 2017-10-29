@@ -1,6 +1,6 @@
 {% extends 'common/base.html.j2' %}
-
 {% block content %}
+{{ event_form.media }}
 <form method="post" action="">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
     {{ event_form }}
