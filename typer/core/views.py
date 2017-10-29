@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from .models import Wallet, Event, Bet
@@ -48,8 +49,10 @@ def event_info(request, event_id):
     template_data = {'event': event,
                      'fields': fields,
                      'bets': bets,
-                     'username': request.user.username,
-                     }
+                     'username': request.user.username,}
+    if request.session.get('alert', False):
+        template_data['alert'] = request.session.get('alert', False)
+        request.session['alert'] = False
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
         if bet_form.is_valid():
@@ -61,15 +64,19 @@ def event_info(request, event_id):
                 bet.odd = event.home_odd
             elif bet.chosen_result == 2:
                 bet.odd = event.away_odd
-            if bet.value > bet.wallet.money:
-                #TODO: not enough money
-                pass
-            else:
-                bet.wallet.money -= bet.value
-                bet.wallet.save()
+
+            bet.wallet.money -= bet.value
+            bet.wallet.save()
             bet.reward = bet.value * bet.odd
             bet.open = True
             bet.save()
+            return HttpResponseRedirect(".")
+        else:
+            alert = {
+                'type': 'danger',
+                'text': bet_form.errors
+            }
+            request.session['alert'] = alert
             return HttpResponseRedirect(".")
 
     else:
