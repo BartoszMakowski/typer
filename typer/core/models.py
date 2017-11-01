@@ -65,6 +65,11 @@ class Event(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        permissions = (
+            ('can_close', "Can insert result and close event."),
+        )
+
 
 class Bet(models.Model):
     wallet = models.ForeignKey(Wallet, null=False,
