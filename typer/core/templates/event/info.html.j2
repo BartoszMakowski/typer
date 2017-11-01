@@ -1,8 +1,8 @@
 <!--<!DOCTYPE html>-->
 <!--<html lang="en">-->
 <!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>-->
+<!--<meta charset="UTF-8">-->
+<!--<title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>-->
 <!--</head>-->
 <!--<body>-->
 {% extends 'common/base.html.j2' %}
@@ -11,9 +11,9 @@
 <h1>Wydarzenie {{ event.name }} (#{{ event.id }})</h1>
 <hr/>
 {% for field in fields %}
-  {% if not field.is_relation %}
+{% if not field.is_relation %}
 <p><b>{{ field.name }}:</b> {{ event[ field.name ] }}</p>
-  {% endif %}
+{% endif %}
 {% endfor %}
 
 {% if bet_form %}
@@ -21,9 +21,11 @@
 <form method="post" action="">
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
     {{ bet_form }}
-    <input type="submit" value="Obstaw!" />
+    <input type="submit" value="Obstaw!"/>
 </form>
 {% endif %}
+
+
 {% if bets %}
 <hr/>
 <table id="bets_history">
@@ -32,26 +34,28 @@
         <th>Stawka</th>
         <th>Kurs</th>
         <th>Możliwa wygrana</th>
-        {% if not event.open %}<th>Wygrana</th>{% endif %}
+        {% if not event.open %}
+        <th>Wygrana</th>
+        {% endif %}
         <th>Data zawarcia</th>
     </tr>
 
-  {% for bet in bets %}
+    {% for bet in bets %}
     <tr>
         <td>{{ bet.chosen_result }}</td>
         <td>{{ bet.value }}</td>
         <td>{{ bet.odd }}</td>
         <td>{{ bet.reward }}</td>
-        {% if not event.open %}<td>{{ bet.reward * bet.won }}</td>{% endif %}
+        {% if not event.open %}
+        <td>{{ bet.reward * bet.won }}</td>
+        {% endif %}
         <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
     </tr>
-  {% endfor %}
+    {% endfor %}
 </table>
 {% endif %}
 {% if event.open %}
 <hr/>
-    <a class="btn btn-info" href="close">Rozlicz</a>
+<a class="btn btn-info" href="close">Rozlicz</a>
 {% endif %}
 {% endblock %}
-<!--</body>-->
-<!--</html>-->

@@ -1,12 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
 from datetime import datetime
 from .models import Wallet, Event, Bet
 from .forms import BetEventForm, NewEventForm, CloseEventForm
 
+
 @login_required(login_url='/login')
+
 def index(request):
     if request.user.is_authenticated():
         user = request.user
@@ -17,7 +21,9 @@ def index(request):
                        'wallets': wallets,
                        'events': events})
 
+
 @login_required(login_url='/login')
+
 def wallet_info(request, wallet_id):
     if request.user.is_authenticated():
         user = request.user
@@ -33,7 +39,9 @@ def wallet_info(request, wallet_id):
     else:
         return HttpResponse("WALLET INFO PAGE")
 
+
 @login_required(login_url='/login')
+
 def event_list(request):
     events = Event.objects.all()
     return render(request, 'event/index.html.j2',
@@ -41,7 +49,9 @@ def event_list(request):
                    'username': request.user.username,
                    })
 
+
 @login_required(login_url='/login')
+
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
     fields = Event._meta.get_fields()
@@ -50,9 +60,7 @@ def event_info(request, event_id):
                      'fields': fields,
                      'bets': bets,
                      'username': request.user.username,}
-    if request.session.get('alert', False):
-        template_data['alert'] = request.session.get('alert', False)
-        request.session['alert'] = False
+
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
         if bet_form.is_valid():
@@ -64,29 +72,22 @@ def event_info(request, event_id):
                 bet.odd = event.home_odd
             elif bet.chosen_result == 2:
                 bet.odd = event.away_odd
-
             bet.wallet.money -= bet.value
             bet.wallet.save()
             bet.reward = bet.value * bet.odd
-            bet.open = True
             bet.save()
+            messages.success(request, 'Twój zakład został przyjęty.')
             return HttpResponseRedirect(".")
-        else:
-            alert = {
-                'type': 'danger',
-                'text': bet_form.errors
-            }
-            request.session['alert'] = alert
-            return HttpResponseRedirect(".")
-
     else:
-        if event.open:
             bet_form = BetEventForm()
             bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
-            template_data['bet_form'] = bet_form
+    if event.open and event.start_time > timezone.now():
+        template_data['bet_form'] = bet_form
     return render(request, 'event/info.html.j2', template_data)
 
+
 @login_required(login_url='/login')
+
 def event_new(request):
     event_form = NewEventForm()
     template_data = {
@@ -99,12 +100,15 @@ def event_new(request):
             event = event_form.save(commit=False)
             event.author = request.user
             event.save()
+            messages.success(request, 'Wydarzenie zostało dodane')
             return HttpResponseRedirect("/typer/event")
         else:
-            print(event_form.errors)
+            messages.error(request, 'Wydarzenie nie zostało dodane. Popraw błędy w formularzu.')
     return render(request, 'event/new.html.j2', template_data)
 
+
 @login_required(login_url='/login')
+
 def event_close(request, event_id):
     event_close_form = CloseEventForm()
     bets = Bet.objects.filter(event=event_id).all()
@@ -130,7 +134,8 @@ def event_close(request, event_id):
                     bet.won = False
                 bet.open = False
                 bet.save()
+            messages.success(request, 'Wydarzenie zostało zamknięta w powiązane z nim zakłady - pomyślnie rozliczone')
             return HttpResponseRedirect("/typer/event/" + event_id + "/")
         else:
-            print(event_close_form.errors)
+            messages.error(request, 'Nie udało się zamknąć wydarzenia.')
     return render(request, 'event/close.html.j2', template_data)
