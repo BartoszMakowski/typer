@@ -1,18 +1,67 @@
 {% extends 'common/base.html.j2' %}
 
 {% block content %}
-<h1>Witaj, {{ username }}</h1>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <h1>Witaj, <strong>{{ username }}</strong>!</h1>
+    </div>
+</div>
 <hr>
-<h2>Twoje portfele:</h2>
-<ul>
-    {% for wallet in wallets %}
-    <li><a href="/typer/wallet/{{ wallet.id }}">{{  wallet.name  }}</a></li>
-    {% endfor %}
-</ul>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Twoje portfele:</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Saldo</th>
+            </tr>
+            </thead>
+            {% for wallet in wallets %}
+            <td><a href="/typer/wallet/{{ wallet.id }}">{{ wallet.name }}</a></td>
+            <td>{{ wallet.money }}</td>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 <hr>
-<h2>Dostępne wydarzenia:</h2>
-    {% for event in events %}
-    <li><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></li>
-    {% endfor %}
-<h4><a href="/typer/event/new">Dodaj nowe</a></h4>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Dostępne wydarzenia:</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Gospodarze</th>
+                <th>Goście</th>
+                <th>Data rozpoczęcia</th>
+            </tr>
+            </thead>
+            {% for event in events %}
+            <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
+            <td>{{ event.home_name }}</td>
+            <td>{{ event.away_name }}</td>
+            <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <a href="/typer/event/new">
+        <button type="button" class="btn btn-default btn-sm btn-block" >Dodaj nowe</button>
+        </a>
+
+    </div>
+</div>
 {% endblock %}

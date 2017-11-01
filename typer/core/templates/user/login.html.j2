@@ -1,10 +1,12 @@
 {% extends 'common/base.html.j2' %}
 
 {% block content %}
-<h2>Login</h2>
+<h2>Logowanie</h2>
 <form method="post">
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    {{ form }}
-    <button type="submit">Login</button>
+    <div class="form-group">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        {{ form }}
+        <button type="submit" class="btn btn-default">Zaloguj się</button>
+    </div>
 </form>
 {% endblock %}

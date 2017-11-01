@@ -24,15 +24,37 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <span class="h1" class="navbar-brand mb-0">Typer</span>
-    {% if username %}
-    <span>Jesteś zalogowany jako: {{ username }}</span>
-    <a class="btn btn-danger" href="/logout">Wyloguj się</a>
-    {% else %}
-    <a class="btn btn-info" href="/login">Zaloguj się</a>
-    {% endif %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Typer</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if username %}
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ username }}</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Wyloguj się</a></li>
+            {% else %}
+            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Zaloguj się</a></li>
+            {% endif %}
+
+        </ul>
+        <!--<div class="col-md-6">-->
+        <!--{% if username %}-->
+        <!--<p>Jesteś zalogowany jako: <b>{{ username }}</b></p>-->
+        <!--{% endif %}-->
+        <!--</div>-->
+        <!--<div class="col-md-2 col-md-offset-1">-->
+        <!--{% if username %}-->
+        <!--<a class="btn btn-danger" href="/logout">Wyloguj się</a>-->
+        <!--{% else %}-->
+        <!--<a class="btn btn-info" href="/login">Zaloguj się</a>-->
+        <!--{% endif %}-->
+        <!--</div>-->
+
+        <!--</div>-->
+    </div>
 </nav>
+
 
 {% if messages %}
 <div class="messages">
@@ -47,10 +69,12 @@
     {% endblock %}
 </div>
 
-<nav class="navbar navbar-default navbar-fixed-bottom">
-  <div class="container">
-    <a href="..">Powrót</a>
-  </div>
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href=".."><span class="glyphicon glyphicon-menu-left"></span> powrót</a></li>
+        </ul>
+    </div>
 </nav>
 
 </body>
