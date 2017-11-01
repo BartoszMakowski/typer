@@ -1,61 +1,124 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--<meta charset="UTF-8">-->
-<!--<title>Wydarzenie {{ event.name }} (#{{ event.id }})</title>-->
-<!--</head>-->
-<!--<body>-->
 {% extends 'common/base.html.j2' %}
 
 {% block content %}
-<h1>Wydarzenie {{ event.name }} (#{{ event.id }})</h1>
+<div class="row">
+    <div class="col-md-1">
+        <h2><strong>#{{ event.id }}</strong></h2>
+    </div>
+    <div class="col-md-6 col-md-offset-2 center">
+        <h2><strong>{{ event.name }}</strong></h2>
+    </div>
+    {% if event.result %}
+    <div class="col-md-3 center">
+        <h2>wynik: {{ event.result }}</h2>
+    </div>
+    {% endif %}
+</div>
 <hr/>
-{% for field in fields %}
-{% if not field.is_relation %}
-<p><b>{{ field.name }}:</b> {{ event[ field.name ] }}</p>
-{% endif %}
-{% endfor %}
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 center">
+        <h3>{{ event.home_name }} - {{ event.away_name }}</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 center">
+        <h4>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</h4>
+    </div>
+</div>
+
+<hr/>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>kursy:</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-1 center">
+        <h4>1: {{event.home_odd }}</h4>
+    </div>
+    <div class="col-md-2 col-md-offset-2 center">
+        <h4>X: {{event.draw_odd }}</h4>
+    </div>
+    <div class="col-md-2 col-md-offset-2 centers">
+        <h4>2: {{event.away_odd }}</h4>
+    </div>
+</div>
 
 {% if bet_form %}
 <hr/>
-<form method="post" action="">
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-    {{ bet_form }}
-    <input type="submit" value="Obstaw!"/>
+<form method="post" class="center">
+    <div class="form-group">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        {{ bet_form }}
+        <button type="submit" class="btn btn-default">Obstaw!</button>
+    </div>
 </form>
 {% endif %}
 
-
 {% if bets %}
 <hr/>
-<table id="bets_history">
-    <tr>
-        <th>Typ</th>
-        <th>Stawka</th>
-        <th>Kurs</th>
-        <th>Możliwa wygrana</th>
-        {% if not event.open %}
-        <th>Wygrana</th>
-        {% endif %}
-        <th>Data zawarcia</th>
-    </tr>
+<div class="row">
+    <div class="col-md-6">
+        <h4>zawarte zakłady:</h4>
+    </div>
+</div>
 
-    {% for bet in bets %}
-    <tr>
-        <td>{{ bet.chosen_result }}</td>
-        <td>{{ bet.value }}</td>
-        <td>{{ bet.odd }}</td>
-        <td>{{ bet.reward }}</td>
-        {% if not event.open %}
-        <td>{{ bet.reward * bet.won }}</td>
-        {% endif %}
-        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped" id="bets_history">
+            <thead>
+            <tr>
+                <th>Gracz</th>
+                <th>Portfel</th>
+                <th>Czas zawarcia</th>
+                <th>Typ</th>
+                <th>Stawka</th>
+                <th>Kurs</th>
+                <th>Możliwa wygrana</th>
+                {% if not event.open %}
+                <th>Wygrana</th>
+                {% endif %}
+            </tr>
+            </thead>
+            {% for event in events %}
+            <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
+            <td>{{ event.home_name }}</td>
+            <td>{{ event.away_name }}</td>
+            <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            {% endfor %}
+            </thead>
+            </tr>
+
+            {% for bet in bets %}
+            <tr>
+                <td>{{ bet.wallet.owner}}</td>
+                <td>{{ bet.wallet }}</td>
+                <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ bet.chosen_result }}</td>
+                <td>{{ bet.value }}</td>
+                <td>{{ bet.odd }}</td>
+                <td>{{ bet.reward }}</td>
+                {% if not event.open %}
+                <td>{{ bet.reward * bet.won }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 {% endif %}
+
 {% if event.open %}
-<hr/>
-<a class="btn btn-info" href="close">Rozlicz</a>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <a href="close">
+        <button type="button" class="btn btn-default btn-sm btn-block" >Rozlicz wydarzenie</button>
+        </a>
+    </div>
+</div>
 {% endif %}
 {% endblock %}
