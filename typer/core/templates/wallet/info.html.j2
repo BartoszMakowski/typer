@@ -1,10 +1,18 @@
 {% extends 'common/base.html.j2' %}
 
 {% block content %}
-<h1>Portfel {{ wallet.name }} (#{{ wallet.id }}) - info</h1>
+<div class="row">
+    <div class="col-md-1">
+        <h2><strong>#{{ wallet.id }}</strong></h2>
+    </div>
+    <div class="col-md-6 col-md-offset-2 center">
+        <h2><strong>{{ wallet.name }}</strong></h2>
+    </div>
+    <div class="col-md-3 center">
+        <h2>{{ '%0.2f' % wallet.money }} zł</h2>
+    </div>
+</div>
 <hr/>
-<p><b>właściciel:</b> {{ wallet.owner }}</p>
-<p><b>saldo:</b> {{ wallet.money }}</p>
 
 {% if open_bets %}
 <div class="row">
@@ -20,7 +28,6 @@
             <tr>
                 <th>Czas wydarzenia</th>
                 <th>Wydarzenie</th>
-
                 <th>Typ</th>
                 <th>Stawka</th>
                 <th>Kurs</th>
@@ -31,11 +38,12 @@
             <tr>
                 <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
-
+                {% if user == bet.wallet.owner %}
                 <td>{{ bet.chosen_result }}</td>
-                <td>{{ bet.value }}</td>
-                <td>{{ bet.odd }}</td>
-                <td>{{ bet.reward }}</td>
+                <td>{{ '%0.2f' % bet.value }} zł</td>
+                <td>{{ '%0.2f' % bet.odd }}</td>
+                <td>{{ '%0.2f' % bet.reward }} zł</td>
+                {% endif %}
             </tr>
             {% endfor %}
             </tr>
@@ -60,12 +68,11 @@
             <tr>
                 <th>Czas wydarzenia</th>
                 <th>Wydarzenie</th>
-
                 <th>Typ</th>
                 <th>Stawka</th>
                 <th>Kurs</th>
                 <th>Możliwa wygrana</th>
-                                <th>Wygrana</th>
+                <th>Wygrana</th>
 
             </tr>
             </thead>
@@ -73,16 +80,15 @@
             {% if bet.won %}
             <tr class="won">
                 {% else %}
-                <tr class="lost">
-            {% endif %}
+            <tr class="lost">
+                {% endif %}
                 <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
-
                 <td>{{ bet.chosen_result }}</td>
-                <td>{{ bet.value }}</td>
-                <td>{{ bet.odd }}</td>
-                <td>{{ bet.reward }}</td>
-                <td>{{ bet.reward * bet.won }}</td>
+                <td>{{ '%0.2f' % bet.value }} zł</td>
+                <td>{{ '%0.2f' % bet.odd }}</td>
+                <td>{{ '%0.2f' % bet.reward }} zł</td>
+                <td>{{ '%0.2f' % (bet.reward * bet.won) }} zł</td>
             </tr>
             {% endfor %}
             </tr>

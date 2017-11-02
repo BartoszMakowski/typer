@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
+from django.utils import timezone
 from datetime import datetime
 
 BET_SIDE = (
@@ -28,6 +29,9 @@ class Wallet(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_lifetime(self):
+        return (timezone.now() - self.creation_time).days
 
 
 class Event(models.Model):

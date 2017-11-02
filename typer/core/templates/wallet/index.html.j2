@@ -20,7 +20,7 @@
             {% for wallet in wallets %}
             <tr>
             <td><a href="/typer/wallet/{{ wallet.id }}">{{ wallet.name }}</a></td>
-            <td>{{ wallet.money }}</td>
+            <td>{{ '%0.2f' % wallet.money }} zł</td>
             <td>{{ wallet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
             {% endfor %}
             </tr>

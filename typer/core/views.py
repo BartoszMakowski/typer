@@ -46,9 +46,9 @@ def wallet_list(request):
 def wallet_info(request, wallet_id):
     user = request.user
     wallet = Wallet.objects.get(id=wallet_id)
-    if wallet.owner != user and not user.is_superuser:
-        messages.error(request, 'Nie jesteś właścicielem tego portfela!')
-        return HttpResponseRedirect('/typer/')
+    # if wallet.owner != user and not user.is_superuser:
+    #     messages.error(request, 'Nie jesteś właścicielem tego portfela!')
+    #     return HttpResponseRedirect('/typer/')
     bets = Bet.objects.filter(wallet=wallet)
     open_bets = bets.filter(open=True).all()
     closed_bets = bets.filter(open=False).all()
@@ -158,3 +158,12 @@ def event_close(request, event_id):
         else:
             messages.error(request, 'Nie udało się zamknąć wydarzenia.')
     return render(request, 'event/close.html.j2', template_data)
+
+
+@login_required(login_url='/login')
+def ranking_list(request):
+    wallets = Wallet.objects.all()
+    return render(request, 'ranking/index.html.j2',
+                  {'wallets': wallets,
+                   'username': request.user.username,
+                   })

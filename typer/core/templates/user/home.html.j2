@@ -23,7 +23,7 @@
             </thead>
             {% for wallet in wallets %}
             <td><a href="/typer/wallet/{{ wallet.id }}">{{ wallet.name }}</a></td>
-            <td>{{ wallet.money }}</td>
+            <td>{{ '%0.2f' % wallet.money }} zł</td>
             {% endfor %}
         </table>
     </div>

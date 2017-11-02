@@ -1,0 +1,36 @@
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>Ranking graczy</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Miejsce</th>
+                <th>Gracz</th>
+                <th>Portfel</th>
+                <!--<th>Saldo początkowe</th>-->
+                <th>Saldo</th>
+                <th>W grze od</th>
+            </tr>
+            </thead>
+            {% for wallet in wallets|sort(reverse=True, attribute='money') %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ wallet.owner }}</td>
+                <td><a href="/typer/wallet/{{ wallet.id }}">{{ wallet.name }}</a></td>
+                <td>{{ '%0.2f' % wallet.money }} zł</td>
+                <!--<td>{{ wallet.money }}</td>-->
+                <td>{{ wallet.get_lifetime() }} dni</td>
+                {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}
