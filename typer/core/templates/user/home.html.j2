@@ -55,7 +55,14 @@
         </table>
     </div>
 </div>
+<hr/>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <p><a href="/typer/event/">Wszystkie wydarzenia</a> </p>
+    </div>
+</div>
 
+{% if perms.event.can_add_event %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="/typer/event/new">
@@ -63,4 +70,6 @@
         </a>
     </div>
 </div>
+{% endif %}
+
 {% endblock %}

@@ -29,12 +29,13 @@
         </table>
     </div>
 </div>
+{% if perms.event.can_add_event %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="/typer/event/new">
         <button type="button" class="btn btn-default btn-sm btn-block" >Dodaj nowe</button>
         </a>
-
     </div>
 </div>
+{% endif %}
 {% endblock %}

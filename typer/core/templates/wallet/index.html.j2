@@ -1,0 +1,30 @@
+{% extends 'common/base.html.j2' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>Lista Twoich portfeli</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Saldo</th>
+                <th>Czas utworzenia</th>
+            </tr>
+            </thead>
+            {% for wallet in wallets %}
+            <tr>
+            <td><a href="/typer/wallet/{{ wallet.id }}">{{ wallet.name }}</a></td>
+            <td>{{ wallet.money }}</td>
+            <td>{{ wallet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

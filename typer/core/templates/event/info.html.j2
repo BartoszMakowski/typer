@@ -84,24 +84,18 @@
                 {% endif %}
             </tr>
             </thead>
-            {% for event in events %}
-            <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
-            <td>{{ event.home_name }}</td>
-            <td>{{ event.away_name }}</td>
-            <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
-            {% endfor %}
-            </thead>
-            </tr>
 
             {% for bet in bets %}
             <tr>
                 <td>{{ bet.wallet.owner}}</td>
                 <td>{{ bet.wallet }}</td>
                 <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                {% if user == bet.wallet.owner %}
                 <td>{{ bet.chosen_result }}</td>
                 <td>{{ bet.value }}</td>
                 <td>{{ bet.odd }}</td>
                 <td>{{ bet.reward }}</td>
+                {% endif %}
                 {% if not event.open %}
                 <td>{{ bet.reward * bet.won }}</td>
                 {% endif %}
@@ -112,11 +106,11 @@
 </div>
 {% endif %}
 
-{% if event.open %}
+{% if event.open and perms.can_close_event %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="close">
-        <button type="button" class="btn btn-default btn-sm btn-block" >Rozlicz wydarzenie</button>
+            <button type="button" class="btn btn-default btn-sm btn-block">Rozlicz wydarzenie</button>
         </a>
     </div>
 </div>

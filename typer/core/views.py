@@ -1,12 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
 from .models import Wallet, Event, Bet
 from .forms import BetEventForm, NewEventForm, CloseEventForm
+
+
+# based on: https://fragmentsofcode.wordpress.com/2008/12/08/django-group_required-decorator/
+def group_required(group):
+    def in_groups(u):
+        if u.is_authenticated():
+            if bool(u.groups.filter(name__in=group)) | u.is_superuser:
+                return True
+        return False
+    return user_passes_test(in_groups, login_url='/typer')
 
 
 @login_required(login_url='/login')
@@ -24,20 +34,30 @@ def index(request):
 
 @login_required(login_url='/login')
 
+def wallet_list(request):
+    wallets = Wallet.objects.filter(owner=request.user)
+    return render(request, 'wallet/index.html.j2',
+                  {'wallets': wallets,
+                   'username': request.user.username,
+                   })
+
+
+@login_required(login_url='/login')
+
 def wallet_info(request, wallet_id):
-    if request.user.is_authenticated():
-        user = request.user
-        wallet = Wallet.objects.get(id=wallet_id)
-        bets = Bet.objects.filter(wallet=wallet)
-        open_bets = bets.filter(open=True).all()
-        closed_bets = bets.filter(open=False).all()
-        return render(request, 'wallet/info.html.j2',
-                      {'username': user.username,
-                       'wallet': wallet,
-                       'open_bets': open_bets,
-                       'closed_bets': closed_bets})
-    else:
-        return HttpResponse("WALLET INFO PAGE")
+    user = request.user
+    wallet = Wallet.objects.get(id=wallet_id)
+    if wallet.owner != user and not user.is_superuser:
+        messages.error(request, 'Nie jesteś właścicielem tego portfela!')
+        return HttpResponseRedirect('/typer/')
+    bets = Bet.objects.filter(wallet=wallet)
+    open_bets = bets.filter(open=True).all()
+    closed_bets = bets.filter(open=False).all()
+    return render(request, 'wallet/info.html.j2',
+                  {'username': user.username,
+                   'wallet': wallet,
+                   'open_bets': open_bets,
+                   'closed_bets': closed_bets})
 
 
 @login_required(login_url='/login')
@@ -59,7 +79,7 @@ def event_info(request, event_id):
     template_data = {'event': event,
                      'fields': fields,
                      'bets': bets,
-                     'username': request.user.username,}
+                     'username': request.user.username, }
 
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
@@ -83,9 +103,13 @@ def event_info(request, event_id):
             bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
     if event.open and event.start_time > timezone.now():
         template_data['bet_form'] = bet_form
+        # if not request.user.is_superuser:
+        #     bets = bets.filter(wallet__owner=request.user)
+        #     template_data['bets'] = bets
     return render(request, 'event/info.html.j2', template_data)
 
 
+@group_required('Event admins')
 @login_required(login_url='/login')
 
 def event_new(request):

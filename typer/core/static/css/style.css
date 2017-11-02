@@ -3,3 +3,7 @@ body { padding-bottom: 70px; }
 .center{
     text-align: center;
 }
+
+.alert-error {
+    background-color: #d9534f;
+}
