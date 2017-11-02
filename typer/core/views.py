@@ -16,24 +16,24 @@ def group_required(group):
             if bool(u.groups.filter(name__in=group)) | u.is_superuser:
                 return True
         return False
+
     return user_passes_test(in_groups, login_url='/typer')
 
 
 @login_required(login_url='/login')
-
 def index(request):
-    if request.user.is_authenticated():
-        user = request.user
-        wallets = Wallet.objects.filter(owner=user).all()
-        events = Event.objects.filter(start_time__gte=datetime.now(), open=True)
-        return render(request, 'user/home.html.j2',
-                      {'username': user.username,
-                       'wallets': wallets,
-                       'events': events})
+    user = request.user
+    wallets = Wallet.objects.filter(owner=user)
+    events = Event.objects.filter(start_time__gte=timezone.now(), open=True)
+    events_to_close = Event.objects.filter(end_time__lte=timezone.now(), open=True)
+    return render(request, 'user/home.html.j2',
+                  {'username': user.username,
+                   'wallets': wallets,
+                   'events': events,
+                   'events_to_close': events_to_close})
 
 
 @login_required(login_url='/login')
-
 def wallet_list(request):
     wallets = Wallet.objects.filter(owner=request.user)
     return render(request, 'wallet/index.html.j2',
@@ -43,7 +43,6 @@ def wallet_list(request):
 
 
 @login_required(login_url='/login')
-
 def wallet_info(request, wallet_id):
     user = request.user
     wallet = Wallet.objects.get(id=wallet_id)
@@ -61,7 +60,6 @@ def wallet_info(request, wallet_id):
 
 
 @login_required(login_url='/login')
-
 def event_list(request):
     events = Event.objects.all()
     return render(request, 'event/index.html.j2',
@@ -71,7 +69,6 @@ def event_list(request):
 
 
 @login_required(login_url='/login')
-
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
     fields = Event._meta.get_fields()
@@ -94,13 +91,13 @@ def event_info(request, event_id):
                 bet.odd = event.away_odd
             bet.wallet.money -= bet.value
             bet.wallet.save()
-            bet.reward = bet.value * bet.odd
+            bet.reward = round(bet.value * bet.odd, 2)
             bet.save()
             messages.success(request, 'Twój zakład został przyjęty.')
             return HttpResponseRedirect(".")
     else:
-            bet_form = BetEventForm()
-            bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
+        bet_form = BetEventForm()
+        bet_form.fields['wallet'].queryset = Wallet.objects.filter(owner=request.user)
     if event.open and event.start_time > timezone.now():
         template_data['bet_form'] = bet_form
         # if not request.user.is_superuser:
@@ -111,7 +108,6 @@ def event_info(request, event_id):
 
 @group_required('Event admins')
 @login_required(login_url='/login')
-
 def event_new(request):
     event_form = NewEventForm()
     template_data = {
@@ -132,7 +128,6 @@ def event_new(request):
 
 
 @login_required(login_url='/login')
-
 def event_close(request, event_id):
     event_close_form = CloseEventForm()
     bets = Bet.objects.filter(event=event_id).all()

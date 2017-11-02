@@ -27,7 +27,7 @@ class Wallet(models.Model):
                                    verbose_name='Portfel-szablon')
 
     def __str__(self):
-        return self.name + ' [' + str(self.money) + ']'
+        return self.name
 
 
 class Event(models.Model):

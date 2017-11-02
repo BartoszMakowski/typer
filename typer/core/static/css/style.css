@@ -7,3 +7,11 @@ body { padding-bottom: 70px; }
 .alert-error {
     background-color: #d9534f;
 }
+
+.lost {
+    background-color: #d9534f;
+}
+
+.won {
+    background-color: #5cb85c;
+}

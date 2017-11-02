@@ -29,6 +29,15 @@
         <div class="navbar-header">
             <a class="navbar-brand">Typer</a>
         </div>
+        <div class="col-md-1"></div>
+        <ul class="nav navbar-nav navbar-left">
+            {% if username %}
+            <li><a href="/typer/wallet"><span class="glyphicon glyphicon glyphicon-euro"></span> Portfele</a></li>
+            <li><a href="/typer/event"><span class="glyphicon glyphicon glyphicon-star"></span> wydarzenia</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-user"></span> Znajomi</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon glyphicon glyphicon-signal"></span> Rankingi</a></li>
+            {% endif %}
+        </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if username %}
             <li><a href="/typer"><span class="glyphicon glyphicon-user"></span> {{ username }}</a></li>
@@ -36,7 +45,6 @@
             {% else %}
             <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Zaloguj się</a></li>
             {% endif %}
-
         </ul>
     </div>
 </nav>

@@ -5,54 +5,91 @@
 <hr/>
 <p><b>właściciel:</b> {{ wallet.owner }}</p>
 <p><b>saldo:</b> {{ wallet.money }}</p>
-{% if open_bets %}
-<hr/>
-<h3>Otwarte zakłady</h3>
-<table id="open_bets">
-    <tr>
-        <th>Typ</th>
-        <th>Stawka</th>
-        <th>Kurs</th>
-        <th>Możliwa wygrana</th>
-        <th>Data zawarcia</th>
-    </tr>
 
-  {% for bet in open_bets %}
-    <tr>
-        <td>{{ bet.chosen_result }}</td>
-        <td>{{ bet.value }}</td>
-        <td>{{ bet.odd }}</td>
-        <td>{{ bet.reward }}</td>
-        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
-    </tr>
-  {% endfor %}
-</table>
+{% if open_bets %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>Otwarte zakłady</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Czas wydarzenia</th>
+                <th>Wydarzenie</th>
+
+                <th>Typ</th>
+                <th>Stawka</th>
+                <th>Kurs</th>
+                <th>Możliwa wygrana</th>
+            </tr>
+            </thead>
+            {% for bet in open_bets %}
+            <tr>
+                <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
+
+                <td>{{ bet.chosen_result }}</td>
+                <td>{{ bet.value }}</td>
+                <td>{{ bet.odd }}</td>
+                <td>{{ bet.reward }}</td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
 {% endif %}
+
 
 {% if closed_bets %}
-<hr/>
-<h3>Ostatnio rozliczone zakłady</h3>
-<table id="closed_bets">
-    <tr>
-        <th>Typ</th>
-        <th>Stawka</th>
-        <th>Kurs</th>
-        <th>Możliwa wygrana</th>
-        <th>Data zawarcia</th>
-    </tr>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Rozliczone zakłady</h4>
+    </div>
+</div>
 
-  {% for bet in closed_bets %}
-    <tr>
-        <td>{{ bet.chosen_result }}</td>
-        <td>{{ bet.value }}</td>
-        <td>{{ bet.odd }}</td>
-        <td>{{ bet.reward }}</td>
-        <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
-    </tr>
-  {% endfor %}
-</table>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Czas wydarzenia</th>
+                <th>Wydarzenie</th>
+
+                <th>Typ</th>
+                <th>Stawka</th>
+                <th>Kurs</th>
+                <th>Możliwa wygrana</th>
+                                <th>Wygrana</th>
+
+            </tr>
+            </thead>
+            {% for bet in closed_bets %}
+            {% if bet.won %}
+            <tr class="won">
+                {% else %}
+                <tr class="lost">
+            {% endif %}
+                <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
+
+                <td>{{ bet.chosen_result }}</td>
+                <td>{{ bet.value }}</td>
+                <td>{{ bet.odd }}</td>
+                <td>{{ bet.reward }}</td>
+                <td>{{ bet.reward * bet.won }}</td>
+            </tr>
+            {% endfor %}
+            </tr>
+        </table>
+    </div>
+</div>
 {% endif %}
-
 
 
 {% endblock %}

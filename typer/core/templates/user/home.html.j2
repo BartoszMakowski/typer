@@ -9,7 +9,7 @@
 <hr>
 <div class="row">
     <div class="col-md-6">
-        <h2>Twoje portfele</h2>
+        <h4>Twoje portfele</h4>
     </div>
 </div>
 <div class="row">
@@ -32,7 +32,7 @@
 <hr>
 <div class="row">
     <div class="col-md-6">
-        <h2>Dostępne wydarzenia</h2>
+        <h4>Dostępne wydarzenia</h4>
     </div>
 </div>
 <div class="row">
@@ -47,10 +47,12 @@
             </tr>
             </thead>
             {% for event in events %}
-            <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
-            <td>{{ event.home_name }}</td>
-            <td>{{ event.away_name }}</td>
-            <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            <tr>
+                <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
+                <td>{{ event.home_name }}</td>
+                <td>{{ event.away_name }}</td>
+                <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
             {% endfor %}
         </table>
     </div>
@@ -58,7 +60,7 @@
 <hr/>
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
-        <p><a href="/typer/event/">Wszystkie wydarzenia</a> </p>
+        <p><a href="/typer/event/">Wszystkie wydarzenia</a></p>
     </div>
 </div>
 
@@ -66,8 +68,38 @@
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="/typer/event/new">
-        <button type="button" class="btn btn-default btn-sm btn-block" >Dodaj nowe</button>
+            <button type="button" class="btn btn-default btn-sm btn-block">Dodaj nowe</button>
         </a>
+    </div>
+</div>
+{% endif %}
+
+{% if perms.event.can_close_event and events_to_close %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>Wydarzenia do rozliczenia</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Gospodarze</th>
+                <th>Goście</th>
+                <th>Data rozpoczęcia</th>
+            </tr>
+            </thead>
+            {% for event in events_to_close %}
+            <tr>
+                <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
+                <td>{{ event.home_name }}</td>
+                <td>{{ event.away_name }}</td>
+                <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 {% endif %}
