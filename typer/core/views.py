@@ -13,8 +13,6 @@ from .forms import BetEventForm, NewEventForm, CloseEventForm
 def group_required(group):
     def in_groups(u):
         if u.is_authenticated():
-            print (u)
-            print (u.groups.all())
             if bool(u.groups.filter(name=group)) | u.is_superuser:
                 return True
         return False
@@ -73,7 +71,7 @@ def event_list(request):
 @login_required(login_url='/login')
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
-    if event.end_time < timezone.now():
+    if event.end_time < timezone.now() and event.open:
         event.to_close = True
     else:
         event.to_close = False

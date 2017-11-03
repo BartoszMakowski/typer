@@ -51,7 +51,7 @@
                 <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
                 <td>{{ event.home_name }}</td>
                 <td>{{ event.away_name }}</td>
-                <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ localtime(event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
             </tr>
             {% endfor %}
         </table>
