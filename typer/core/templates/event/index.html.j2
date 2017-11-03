@@ -23,13 +23,13 @@
             <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
             <td>{{ event.home_name }}</td>
             <td>{{ event.away_name }}</td>
-            <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ localtime(event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
             {% endfor %}
             </tr>
         </table>
     </div>
 </div>
-{% if perms.event.can_add_event %}
+{% if perms.core.add_event %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="/typer/event/new">

@@ -64,7 +64,7 @@
     </div>
 </div>
 
-{% if perms.event.can_add_event %}
+{% if perms.core.add_event %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="/typer/event/new">
@@ -73,8 +73,7 @@
     </div>
 </div>
 {% endif %}
-
-{% if perms.event.can_close_event and events_to_close %}
+{% if perms.core.can_close and events_to_close %}
 <div class="row">
     <div class="col-md-6">
         <h4>Wydarzenia do rozliczenia</h4>
@@ -96,7 +95,7 @@
                 <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
                 <td>{{ event.home_name }}</td>
                 <td>{{ event.away_name }}</td>
-                <td>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ localtime(event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
             </tr>
             {% endfor %}
         </table>

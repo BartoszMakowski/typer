@@ -13,7 +13,9 @@ from .forms import BetEventForm, NewEventForm, CloseEventForm
 def group_required(group):
     def in_groups(u):
         if u.is_authenticated():
-            if bool(u.groups.filter(name__in=group)) | u.is_superuser:
+            print (u)
+            print (u.groups.all())
+            if bool(u.groups.filter(name=group)) | u.is_superuser:
                 return True
         return False
 
@@ -71,13 +73,16 @@ def event_list(request):
 @login_required(login_url='/login')
 def event_info(request, event_id):
     event = Event.objects.get(id=event_id)
+    if event.end_time < timezone.now():
+        event.to_close = True
+    else:
+        event.to_close = False
     fields = Event._meta.get_fields()
     bets = Bet.objects.filter(event=event_id)
     template_data = {'event': event,
                      'fields': fields,
                      'bets': bets,
                      'username': request.user.username, }
-
     if request.method == 'POST':
         bet_form = BetEventForm(request.POST)
         if bet_form.is_valid():
@@ -129,9 +134,12 @@ def event_new(request):
 
 @login_required(login_url='/login')
 def event_close(request, event_id):
+    event = Event.objects.get(pk=event_id)
+    if event.end_time > timezone.now():
+        messages.warning(request, 'Nie można zamnkąć wydarzenia, które jeszcze trwa!')
+        return HttpResponseRedirect('..')
     event_close_form = CloseEventForm()
     bets = Bet.objects.filter(event=event_id).all()
-    print(bets)
     template_data = {
         'event_close_form': event_close_form,
         'username': request.user.username,

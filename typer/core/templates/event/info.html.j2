@@ -24,7 +24,7 @@
 
 <div class="row">
     <div class="col-md-6 col-md-offset-3 center">
-        <h4>{{ event.start_time.strftime('%Y-%m-%d %H:%M') }}</h4>
+        <h4>{{ localtime(event.start_time).strftime('%Y-%m-%d %H:%M') }}</h4>
     </div>
 </div>
 
@@ -89,7 +89,7 @@
             <tr>
                 <td>{{ bet.wallet.owner}}</td>
                 <td>{{ bet.wallet }}</td>
-                <td>{{ bet.creation_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ localtime(bet.creation_time).strftime('%Y-%m-%d %H:%M') }}</td>
                 {% if user == bet.wallet.owner %}
                 <td>{{ bet.chosen_result }}</td>
                 <td>{{ '%0.2f' % bet.value }} zł</td>
@@ -106,7 +106,7 @@
 </div>
 {% endif %}
 
-{% if event.open and perms.can_close_event %}
+{% if event.to_close and perms.core.can_close %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <a href="close">
