@@ -2,8 +2,29 @@
 {% block content %}
 {{ event_form.media }}
 <form method="post" action="">
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
-    {{ event_form }}
-    <input type="submit" value="Dodaj wydarzenie"/>
+    <div class="row">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+        <div class="col-md-8 col-md-offset-2">
+            <table>
+                {% for field in event_form.fields %}
+                <tr>
+                    <td class="col-md-4">
+                        <label for="{{ event_form[field].id_for_label }}">{{ event_form[field].label }}</label>
+                    </td>
+                    <td class="col-md-8">
+                        {{ event_form[field]|add_class("form-control") }}
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td class="col-md-4">
+                    </td>
+                    <td class="col-md-8">
+                        <input type="submit" class="btn btn-default" value="Dodaj wydarzenie"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </form>
 {% endblock %}

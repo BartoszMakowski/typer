@@ -34,7 +34,7 @@
                 <th>Możliwa wygrana</th>
             </tr>
             </thead>
-            {% for bet in open_bets %}
+            {% for bet in open_bets|sort(attribute='start_time') %}
             <tr>
                 <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
@@ -60,7 +60,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <table class="table">
@@ -76,7 +75,7 @@
 
             </tr>
             </thead>
-            {% for bet in closed_bets %}
+            {% for bet in closed_bets|sort(attribute='event.start_time') %}
             {% if bet.won %}
             <tr class="won">
                 {% else %}

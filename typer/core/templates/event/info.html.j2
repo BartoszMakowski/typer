@@ -103,7 +103,9 @@
                 <td>{{ '%0.2f' % bet.value }} zł</td>
                 <td>{{ '%0.2f' % bet.odd }}</td>
                 <td>{{ '%0.2f' % bet.reward }} zł</td>
+                    {% if not bet.open %}
                 <td>{{ '%0.2f' % (bet.reward * bet.won) }} zł</td>
+                    {% endif %}
                 {% endif %}
             </tr>
             {% endfor %}
