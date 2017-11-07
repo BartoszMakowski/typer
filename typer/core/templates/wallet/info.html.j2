@@ -34,9 +34,9 @@
                 <th>Możliwa wygrana</th>
             </tr>
             </thead>
-            {% for bet in open_bets|sort(attribute='start_time') %}
+            {% for bet in open_bets|sort(attribute='event.start_time') %}
             <tr>
-                <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ localtime(bet.event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
                 {% if user == bet.wallet.owner %}
                 <td>{{ bet.chosen_result }}</td>
@@ -81,7 +81,7 @@
                 {% else %}
             <tr class="lost">
                 {% endif %}
-                <td>{{ bet.event.start_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ localtime(bet.event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
                 <td>{{ bet.chosen_result }}</td>
                 <td>{{ '%0.2f' % bet.value }} zł</td>
