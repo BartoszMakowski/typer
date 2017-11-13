@@ -58,6 +58,36 @@
     </div>
 </div>
 <hr/>
+{% if active_events %}
+<div class="row">
+    <div class="col-md-6">
+        <h4>Twoje trwające wydarzenia</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Gospodarze</th>
+                <th>Goście</th>
+                <th>Data rozpoczęcia</th>
+            </tr>
+            </thead>
+            {% for event in active_events|sort(attribute='start_time') %}
+            <tr>
+                <td><a href="/typer/event/{{ event.id }}">{{ event.name }}</a></td>
+                <td>{{ event.home_name }}</td>
+                <td>{{ event.away_name }}</td>
+                <td>{{ localtime(event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<hr/>
+{% endif %}
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
         <p><a href="/typer/event/">Wszystkie wydarzenia</a></p>

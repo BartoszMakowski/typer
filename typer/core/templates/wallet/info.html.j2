@@ -38,7 +38,7 @@
             <tr>
                 <td>{{ localtime(bet.event.start_time).strftime('%Y-%m-%d %H:%M') }}</td>
                 <td><strong>{{ bet.event.name }}:</strong> {{ bet.event.home_name }} - {{ bet.event.away_name }}</td>
-                {% if user == bet.wallet.owner %}
+                {% if user == bet.wallet.owner or bet.event.is_active() %}
                 <td>{{ bet.chosen_result }}</td>
                 <td>{{ '%0.2f' % bet.value }} zł</td>
                 <td>{{ '%0.2f' % bet.odd }}</td>

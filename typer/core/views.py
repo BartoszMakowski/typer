@@ -25,11 +25,13 @@ def index(request):
     user = request.user
     wallets = Wallet.objects.filter(owner=user)
     events = Event.objects.filter(start_time__gte=timezone.now(), open=True)
+    user_active_events = get_user_active_events(user)
     events_to_close = Event.objects.filter(end_time__lte=timezone.now(), open=True)
     return render(request, 'user/home.html.j2',
                   {'username': user.username,
                    'wallets': wallets,
                    'events': events,
+                   'active_events': user_active_events,
                    'events_to_close': events_to_close})
 
 
@@ -173,3 +175,16 @@ def ranking_list(request):
                   {'wallets': wallets,
                    'username': request.user.username,
                    })
+
+
+def get_user_active_bets(user):
+    active_bets = Bet.objects.filter(wallet__owner=user, event__start_time__lte=timezone.now(),
+                                     event__end_time__gte=timezone.now())
+    return active_bets
+
+
+
+def get_user_active_events(user):
+    active_bets = get_user_active_bets(user)
+    active_events = [bet.event for bet in active_bets]
+    return active_events

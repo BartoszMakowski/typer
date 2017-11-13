@@ -98,7 +98,7 @@
                 <td>{{ bet.wallet.owner}}</td>
                 <td>{{ bet.wallet }}</td>
                 <td>{{ localtime(bet.creation_time).strftime('%Y-%m-%d %H:%M') }}</td>
-                {% if user == bet.wallet.owner or not event.open %}
+                {% if user == bet.wallet.owner or event.is_active() %}
                 <td>{{ bet.chosen_result }}</td>
                 <td>{{ '%0.2f' % bet.value }} zł</td>
                 <td>{{ '%0.2f' % bet.odd }}</td>

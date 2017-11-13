@@ -52,19 +52,22 @@ class Event(models.Model):
     away_name = models.CharField(max_length=50, blank=False,
                                  verbose_name='Nazwa zespołu gości')
     home_odd = models.FloatField(default=1.0, blank=False,
-                                 verbose_name='Kurs na zwycięstow gospodarzy',
-                                 validators=[MinValueValidator(1.0, 'Minimalny kurs wynosi 1.0.')])
-    away_odd = models.FloatField(default=1.0, blank=False,
-                                 verbose_name='Kurs na zwycięstwo gości',
+                                 verbose_name='Kurs na zwycięstwo gospodarzy',
                                  validators=[MinValueValidator(1.0, 'Minimalny kurs wynosi 1.0.')])
     draw_odd = models.FloatField(default=1.0, blank=False,
                                  verbose_name='Kurs na remis',
+                                 validators=[MinValueValidator(1.0, 'Minimalny kurs wynosi 1.0.')])
+    away_odd = models.FloatField(default=1.0, blank=False,
+                                 verbose_name='Kurs na zwycięstwo gości',
                                  validators=[MinValueValidator(1.0, 'Minimalny kurs wynosi 1.0.')])
     open = models.BooleanField(default=True, blank=False,
                                verbose_name='Wydarzenie nierozliczone')
     result = models.IntegerField(null=True, blank=True,
                                  verbose_name='Wynik wydarzenia',
                                  choices=BET_SIDE)
+
+    def is_active(self):
+        return self.start_time <= timezone.now() and self.end_time > timezone.now()
 
     def __str__(self):
         return self.name
@@ -98,3 +101,11 @@ class Bet(models.Model):
 
     def __str__(self):
         return 'Zakład: ' + self.event.name
+
+
+class Friendship(models.Model):
+    person = models.ForeignKey(User, null=False,
+                                verbose_name='Osoba', related_name='person')
+    friend = models.ForeignKey(User, null=False,
+                               verbose_name='Znajomy', related_name='friend')
+    acceptance = models.BooleanField(null=False, verbose_name='Akceptacja znajomości')
